@@ -1,10 +1,13 @@
 import os
-from re import sub
 import subprocess
 import sys
 from datetime import datetime, date
 from termcolor import colored
+import platform
+# You will get an error if you're on Windows when importing apt (advanced package tool)
 import apt
+
+device_os = platform.platform().lower()
 
 
 def check_tools():
@@ -12,31 +15,40 @@ def check_tools():
     This function is very important as it checks if all the necessary tools are
     installed on the machine.
     """
-    cache = apt.Cache()
-    cache.open()
-    statusNmap = cache["nmap"].is_installed
-    statusGobuster = cache["gobuster"].is_installed
-    statusNikto = cache["nikto"].is_installed
+    print(colored("\n[..] Checking os support and tools installation...", "red"))
+    if device_os == "linux":
+        cache = apt.Cache()
+        cache.open()
+        status_nmap = cache["nmap"].is_installed
+        status_gobuster = cache["gobuster"].is_installed
+        status_nikto = cache["nikto"].is_installed
 
-    if not statusNmap:
-        print(colored("[🚫] Nmap not installed", "red"))
-        print(colored("[...] Installing Nmap", "yellow"))
-        subprocess.check_output("sudo apt install nmap -y", shell=True, stderr=subprocess.STDOUT)
-        print(colored("[✅] Nmap installed\n", "green"))
+        if not status_nmap:
+            print(colored("[🚫] Nmap not installed", "red"))
+            print(colored("[...] Installing Nmap", "yellow"))
+            subprocess.check_output("sudo apt install nmap -y", shell=True, stderr=subprocess.STDOUT)
+            print(colored("[✅] Nmap installed\n", "green"))
 
-    if not statusGobuster:
-        print(colored("[🚫] Gobuster not installed", "red"))
-        print(colored("[...] Installing Gobuster", "yellow"))
-        subprocess.check_output("sudo apt install gobuster -y", shell=True, stderr=subprocess.STDOUT)
-        print(colored("[✅] Gobuster installed\n", "green"))
+        if not status_gobuster:
+            print(colored("[🚫] Gobuster not installed", "red"))
+            print(colored("[...] Installing Gobuster", "yellow"))
+            subprocess.check_output("sudo apt install gobuster -y", shell=True, stderr=subprocess.STDOUT)
+            print(colored("[✅] Gobuster installed\n", "green"))
 
-    if not statusNikto:
-        print(colored("[🚫] Nikto not installed", "red"))
-        print(colored("[...] Installing Nikto", "yellow"))
-        subprocess.check_output("sudo apt install nikto -y", shell=True, stderr=subprocess.STDOUT)
-        print(colored("[✅] Nikto installed\n", "green"))
+        if not status_nikto:
+            print(colored("[🚫] Nikto not installed", "red"))
+            print(colored("[...] Installing Nikto", "yellow"))
+            subprocess.check_output("sudo apt install nikto -y", shell=True, stderr=subprocess.STDOUT)
+            print(colored("[✅] Nikto installed\n", "green"))
+            print(colored("[✅] Success! Every requirement is installed!\n", "green"))
 
-    print(colored("[✅] Success! Every requirement is installed!\n", "green"))
+    elif device_os == "windows":
+        print(colored("[🚫] Windows is not yet supported! Please use a machine with a Linux Kernel.", "red"))
+        exit(0)
+
+    else:
+        print(colored("[🚫] Your operating system is not supported! Please use a machine with a Linux Kernel.", "red"))
+        exit(0)
 
 
 def log_output(data, tool, text):
@@ -83,6 +95,7 @@ def get_open_ports(target):
             open_ports.append(int(line.split("/")[0]))
 
     return open_ports
+
 
 def scan_directories(target):
     """
@@ -137,15 +150,16 @@ def main():
     # Print the logo
     print_logo()
 
+    # Check for the tools (if they're all installed) => nmap, gobuster and nikto
     check_tools()
 
     # Get the target host
-    target = str(sys.argv).split("--host")[1].replace(" ", "").replace("," , "").replace("]", "").replace("[", "").replace("'", "")
+    target = str(sys.argv).split("--host")[1].replace(" ", "").replace(",", "").replace("]", "").replace("[", "").replace("'", "")
 
     # Scan the open ports
     print(colored("\n[*] Scanning the open ports of the target host...", "green"))
     open_ports = get_open_ports(target)
-    log_output(open_ports, "nmap", "Open ports");
+    log_output(open_ports, "nmap", "Open ports")
     print(colored(f"[+] Open ports: {open_ports}\n", "green"))
 
     # Scan the directories
@@ -161,6 +175,7 @@ def main():
     print(colored(f"[+] Nikto log: {file_name}", "green"))
 
     print(colored("\nMade possible by the anonymous donors 😎", "yellow"))
+
 
 if __name__ == '__main__':
     try:
