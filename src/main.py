@@ -15,7 +15,7 @@ def check_tools():
     This function is very important as it checks if all the necessary tools are
     installed on the machine.
     """
-    print(colored("\n[..] Checking os support and tools installation...", "red"))
+    print(colored("\n[..] Checking os support and tools installation..", "red"))
     if device_os == "linux":
         cache = apt.Cache()
         cache.open()
@@ -25,19 +25,19 @@ def check_tools():
 
         if not status_nmap:
             print(colored("[🚫] Nmap not installed", "red"))
-            print(colored("[...] Installing Nmap", "yellow"))
+            print(colored("[..] Installing Nmap", "yellow"))
             subprocess.check_output("sudo apt install nmap -y", shell=True, stderr=subprocess.STDOUT)
             print(colored("[✅] Nmap installed\n", "green"))
 
         if not status_gobuster:
             print(colored("[🚫] Gobuster not installed", "red"))
-            print(colored("[...] Installing Gobuster", "yellow"))
+            print(colored("[..] Installing Gobuster", "yellow"))
             subprocess.check_output("sudo apt install gobuster -y", shell=True, stderr=subprocess.STDOUT)
             print(colored("[✅] Gobuster installed\n", "green"))
 
         if not status_nikto:
             print(colored("[🚫] Nikto not installed", "red"))
-            print(colored("[...] Installing Nikto", "yellow"))
+            print(colored("[..] Installing Nikto", "yellow"))
             subprocess.check_output("sudo apt install nikto -y", shell=True, stderr=subprocess.STDOUT)
             print(colored("[✅] Nikto installed\n", "green"))
             print(colored("[✅] Success! Every requirement is installed!\n", "green"))
@@ -157,19 +157,19 @@ def main():
     target = str(sys.argv).split("--host")[1].replace(" ", "").replace(",", "").replace("]", "").replace("[", "").replace("'", "")
 
     # Scan the open ports
-    print(colored("\n[*] Scanning the open ports of the target host...", "green"))
+    print(colored("\n[*] Scanning the open ports of the target host..", "green"))
     open_ports = get_open_ports(target)
     log_output(open_ports, "nmap", "Open ports")
     print(colored(f"[+] Open ports: {open_ports}\n", "green"))
 
     # Scan the directories
-    print(colored("[*] Scanning the directories of the target host...", "green"))
+    print(colored("[*] Scanning the directories of the target host..", "green"))
     directories = scan_directories(target)
     log_output(directories, "gobuster", "Existing directories")
     print(colored(f"[+] Existing directories: {directories}\n", "green"))
 
     # Scanning with Nikto
-    print(colored("[*] Scanning the target host with Nikto...", "green"))
+    print(colored("[*] Scanning the target host with Nikto..", "green"))
     nikto = nikto_scan(target)
     file_name = log_output(nikto, "nikto", "Nikto output")
     print(colored(f"[+] Nikto log: {file_name}", "green"))
@@ -183,6 +183,6 @@ if __name__ == '__main__':
     except IndexError:
         print(colored("[⭕] Please specify the target host with --host", "red"))
     except KeyboardInterrupt:
-        print(colored("\n[⭕] Exiting...", "red"))
+        print(colored("\n[⭕] Exiting..", "red"))
     except Exception as error:
         print(colored(f"[⭕] Error: {error}", "red"))
