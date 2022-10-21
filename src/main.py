@@ -15,8 +15,8 @@ def check_tools():
     This function is very important as it checks if all the necessary tools are
     installed on the machine.
     """
-    print(colored("\n[..] Checking os support and tools installation..", "red"))
-    if device_os == "linux":
+    print(colored("\n[..] Checking os support and tools installation..", "yellow"))
+    if "linux" in device_os:
         cache = apt.Cache()
         cache.open()
         status_nmap = cache["nmap"].is_installed
@@ -42,13 +42,13 @@ def check_tools():
             print(colored("[✅] Nikto installed\n", "green"))
             print(colored("[✅] Success! Every requirement is installed!\n", "green"))
 
-    elif device_os == "windows":
+    elif "windows" in device_os:
         print(colored("[🚫] Windows is not yet supported! Please use a machine with a Linux Kernel.", "red"))
-        exit(0)
+        sys.exit()
 
     else:
         print(colored("[🚫] Your operating system is not supported! Please use a machine with a Linux Kernel.", "red"))
-        exit(0)
+        sys.exit()
 
 
 def log_output(data, tool, text):
@@ -140,7 +140,10 @@ def print_msg_box(msg, indent=1, width=None, title=None):
 def print_logo():
     root_dir = os.getcwd()
     if root_dir.endswith("src"):
-        root_dir = root_dir.replace("src", "")
+        root_dir = root_dir.replace("/src", "")
+    elif root_dir.endswith("install"):
+        root_dir = root_dir.replace("/install", "")
+    
     logo_txt = open(f"{root_dir}/assets/logo.txt", "r").read()
     print(colored(logo_txt + "\n", "green"))
     print_msg_box("\n  Author: Sami Hindi\n  Version: 1.0.0\n  GitHub: https://github.com/FujiwaraChoki\n  License: MIT\n")
