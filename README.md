@@ -2,13 +2,8 @@
 This HornetScanner combines multiple tools, to create an ultimate experience using these tools.
 
 # Installation
-To install this program, simply run the following commands for your designated Operating System.
+To install this program, simply run the following commands:
 
->***Windows***
-> Open CMD in Administrator mode and then type:
-```install/setup_wi.bat```
-
->***Linux***
 ```sudo ./install/setup_li.sh```
 
 # Dependencies
