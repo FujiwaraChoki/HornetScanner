@@ -1,3 +1,4 @@
 termcolor==2.0.1
 pyinstaller==5.13.1
 setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
